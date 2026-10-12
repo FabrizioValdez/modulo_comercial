@@ -40,6 +40,7 @@
 
 .atq-flash { background: var(--atq-ok-bg); color: var(--atq-ok); border-radius: 8px; padding: 12px 16px; font-size: 14px; }
 .atq-flash--error { background: #FBE3DA; color: #7C2D12; }
+.atq-alerta { background: #FBE3DA; color: #7C2D12; border: 1px solid #F0B9A6; border-radius: 10px; padding: 14px 18px; font-size: 15px; line-height: 1.5; }
 
 .atq-card { background: var(--atq-surface); border: 1px solid var(--atq-line); border-radius: 12px; padding: 22px; }
 .atq-card--flush { padding: 0; overflow: hidden; }

@@ -64,7 +64,19 @@ Módulo para el CRM en Laravel. Toma el Excel del plan de ataque comercial y arm
    php artisan ataque:importar "storage/app/Plan_Estrategico_Ataque_Comercial_Aceros_F.xlsx"
    ```
 
-7. Entra a `/ataque`.
+7. Importa las personas y fotos del reporte de inteligencia. El paquete `datos-personas` **no está en este repositorio** porque el repositorio es público; se entrega aparte. Cópialo al servidor, por ejemplo en `storage/app/datos-personas`, y corre:
+
+   ```bash
+   php artisan ataque:importar-personas storage/app/datos-personas
+   ```
+
+   El comando:
+   - Cruza cada persona con los decisores que ya vinieron del Excel, por nombre y sin importar tildes (por ejemplo, "Pedro Ríos" con "Pedro Ríos García").
+   - Copia las fotos al disco público.
+   - Guarda los datos de la empresa y las alertas, como la baja de oficio en SUNAT.
+   - Se puede repetir sin duplicar.
+
+8. Entra a `/ataque` desde el escritorio, o a `/ataque/movil` desde el teléfono.
 
 ### Usar el layout de tu CRM
 
@@ -84,6 +96,40 @@ Ese layout tiene que tener `@yield('content')`. Los estilos del módulo van todo
 | `/ataque/proyectos/{id}` | Ficha con **datos actuales**: resumen de lo actual, cliente en tu base con la facturación del año en curso, contratista, qué venderle, decisores con foto y actividad. |
 | `/ataque/proyectos/{id}/investigar` | Arma el prompt (eliges personas, fuentes y la ventana de novedades), lo copias y pegas la respuesta. |
 | `/ataque/investigaciones/{id}` | Informe guardado: estado, novedades, quién decide, personas, ángulo comercial y fuentes. |
+
+## App móvil (`/ataque/movil`)
+
+Es una app web instalable. En el teléfono, abre `/ataque/movil` en Chrome o Safari y elige **"Agregar a la pantalla de inicio"**.
+
+**Sin conexión** muestra lo último que guardó:
+- Proyectos con su prioridad.
+- Alertas.
+- Lo actual y los datos de la empresa.
+- Personas con foto, cargo y universidad.
+- Qué venderle, el próximo paso, la actividad y las noticias ya descargadas.
+
+Para tener todo listo antes de salir a campo, toca **"Guardar todo para usar sin conexión"**: descarga los datos, todas las fotos y las noticias de cada proyecto.
+
+**Con conexión**:
+- Actualiza los datos sola.
+- Trae las noticias de cada proyecto y de cada persona desde varias fuentes.
+- Tiene botones a **LinkedIn**: el perfil guardado o una búsqueda por nombre y empresa, y la página de la empresa.
+- Tiene botones a **Google** y **Google Noticias**.
+
+La facturación **no** viaja al teléfono.
+
+### Fuentes de noticias
+
+Las fuentes se configuran en `config/ataque.php` → `noticias`:
+
+- `busquedas`: buscadores de noticias por RSS. Vienen Google Noticias y Bing Noticias, y `{q}` se reemplaza por la empresa (y por una palabra del proyecto, como "Lurín").
+- `feeds`: RSS de medios que sigas (Gestión, Semana Económica, El Comercio, etc.). Se filtran por el nombre de la empresa.
+
+El servidor lee los titulares, quita los duplicados y guarda el resultado en caché una hora (`NoticiasService`).
+
+### LinkedIn
+
+Solo abre enlaces: el perfil guardado o una búsqueda. No consulta la API de LinkedIn ni hace scraping, porque va contra sus términos.
 
 ## Facturación (ERP)
 
@@ -137,12 +183,15 @@ Al pegar la respuesta:
 
 ```
 app/Console/Commands/Ataque/ImportarPlan.php      php artisan ataque:importar
-app/Http/Controllers/Ataque/                      Plan, Decisor, Investigacion
+app/Console/Commands/Ataque/ImportarPersonas.php  php artisan ataque:importar-personas
+app/Http/Controllers/Ataque/                      Plan, Decisor, Investigacion, Movil
 app/Models/Ataque/                                AtaqueProyecto, AtaqueDecisor, AtaqueActividad, AtaqueInvestigacion, ObraPublica
-app/Services/Ataque/                              PromptInvestigacion, ErpFacturacion, ClienteMatcher
+app/Services/Ataque/                              PromptInvestigacion, ErpFacturacion, ClienteMatcher, NoticiasService
 config/ataque.php
-database/migrations/2026_10_05_100000_create_ataque_tables.php
+database/migrations/                              tablas del módulo + campos de inteligencia (2026_10_12)
 public/css/ataque.css
-resources/views/ataque/
+public/js/ataque-movil.js                         app móvil (offline, noticias, enlaces)
+public/img/ataque-icon-*.png                      íconos de la app
+resources/views/ataque/                           incluye movil.blade.php y sw-movil.blade.php (service worker)
 routes/ataque.php
 ```

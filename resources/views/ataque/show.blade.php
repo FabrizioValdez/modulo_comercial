@@ -33,8 +33,20 @@
         </div>
     </section>
 
+    @if ($proyecto->alerta)
+        <div class="atq-alerta" role="alert"><strong>Atención:</strong> {{ $proyecto->alerta }}</div>
+    @endif
+
     <div class="atq-cols">
         <div class="atq-col-main">
+
+            @if ($proyecto->datos_empresa)
+            <section class="atq-card">
+                <h2 class="atq-h2">La empresa hoy</h2>
+                <p class="atq-p">{{ $proyecto->datos_empresa }}</p>
+                @if ($proyecto->datos_fuente)<div class="atq-mono-sm">Fuente: {{ $proyecto->datos_fuente }}</div>@endif
+            </section>
+            @endif
 
             {{-- LO ACTUAL --}}
             <section class="atq-card atq-card--warm">
@@ -196,6 +208,8 @@
                             <div class="atq-grow">
                                 <div class="{{ $d->nombre ? 'atq-strong' : 'atq-muted' }}">{{ $d->nombre ?: 'Por identificar' }}</div>
                                 <div class="atq-small">{{ $d->cargo }}</div>
+                                @if ($d->universidad)<div class="atq-mono-sm">{{ $d->universidad }}</div>@endif
+                                @if ($d->notas)<div class="atq-small atq-warn">{{ $d->notas }}</div>@endif
                                 <div class="atq-chips atq-chips--tight">
                                     <span class="atq-chip atq-chip--role-{{ $d->rol_compra }}">{{ $d->rol_label }}</span>
                                     @if ($d->sugerido_ia)<span class="atq-chip atq-chip--warn">Sugerido por IA</span>@endif

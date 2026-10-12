@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Ataque\DecisorController;
 use App\Http\Controllers\Ataque\InvestigacionController;
+use App\Http\Controllers\Ataque\MovilController;
 use App\Http\Controllers\Ataque\PlanController;
 use Illuminate\Support\Facades\Route;
 
@@ -26,4 +27,12 @@ Route::middleware(config('ataque.middleware'))
         Route::get('/proyectos/{proyecto}/investigar', [InvestigacionController::class, 'create'])->name('investigar');
         Route::post('/proyectos/{proyecto}/investigar', [InvestigacionController::class, 'store'])->name('investigacion.store');
         Route::get('/investigaciones/{investigacion}', [InvestigacionController::class, 'show'])->name('investigacion.show');
+
+        // App móvil (PWA)
+        Route::get('/movil', [MovilController::class, 'index'])->name('movil');
+        Route::get('/movil/datos', [MovilController::class, 'datos'])->name('movil.datos');
+        Route::get('/movil/noticias/{proyecto}', [MovilController::class, 'noticias'])->name('movil.noticias');
+        Route::get('/movil/noticias-persona/{decisor}', [MovilController::class, 'noticiasPersona'])->name('movil.noticias.persona');
+        Route::get('/movil/manifest.json', [MovilController::class, 'manifest'])->name('movil.manifest');
+        Route::get('/sw-movil.js', [MovilController::class, 'serviceWorker'])->name('movil.sw');
     });

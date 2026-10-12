@@ -45,6 +45,26 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Noticias para la app móvil (fuentes RSS públicas)
+    |--------------------------------------------------------------------------
+    | busquedas: buscadores de noticias; {q} se reemplaza por la empresa/proyecto.
+    | feeds: RSS de medios; se filtran por el nombre de la empresa.
+    */
+    'noticias' => [
+        'cache_minutos' => 60,
+        'max_por_fuente' => 8,
+        'max_total' => 20,
+        'busquedas' => [
+            ['nombre' => 'Google Noticias', 'url' => 'https://news.google.com/rss/search?q={q}&hl=es-419&gl=PE&ceid=PE:es-419'],
+            ['nombre' => 'Bing Noticias', 'url' => 'https://www.bing.com/news/search?q={q}&format=rss&setlang=es-PE'],
+        ],
+        'feeds' => [
+            // 'Gestión' => 'https://...rss',  agrega aquí los RSS de los medios que sigas
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Fotos de decisores
     |--------------------------------------------------------------------------
     */
